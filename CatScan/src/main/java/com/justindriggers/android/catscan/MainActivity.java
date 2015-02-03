@@ -30,6 +30,9 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     private Animation animSlideIn;
     private Animation animSlideOut;
 
+    private int unreadCount = 0;
+    private int lastTopCount = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +63,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if(firstVisibleItem == 0) {
+                    lastTopCount = totalItemCount;
                     if(unreadNotification.getVisibility() == View.VISIBLE) {
                         unreadNotification.setVisibility(View.INVISIBLE);
                         unreadNotification.startAnimation(animSlideOut);
@@ -80,11 +84,19 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             }
         });
 
-        mHandler = new LogHandler(adapter);
+        mHandler = new LogHandler(adapter, runnable);
 
         logReaderTask = new LogReaderTask(mHandler);
         logReaderTask.execute();
     }
+
+    public Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            unreadCount = logs.size() - lastTopCount;
+            unreadNotification.setText(unreadCount + " new logs");
+        }
+    };
 
     @Override
     protected void onDestroy() {

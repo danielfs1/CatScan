@@ -9,9 +9,15 @@ public class LogHandler extends Handler {
 
     public static final String PAYLOAD_KEY = "payload";
 
+    private Runnable countChangeRunnable;
     private ArrayAdapter<LogEntity> mAdapter;
 
     public LogHandler(ArrayAdapter<LogEntity> adapter) {
+        this.mAdapter = adapter;
+    }
+
+    public LogHandler(ArrayAdapter<LogEntity> adapter, Runnable countChangeRunnable) {
+        this.countChangeRunnable = countChangeRunnable;
         this.mAdapter = adapter;
     }
 
@@ -29,6 +35,7 @@ public class LogHandler extends Handler {
 
         if(payload != null) {
             mAdapter.insert(new LogEntity(payload),0);
+            countChangeRunnable.run();
         }
     }
 }
