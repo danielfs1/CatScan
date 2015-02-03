@@ -17,7 +17,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class MainActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
 
     private Handler mHandler;
@@ -52,7 +51,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         adapter = new LogEntityAdapter(this, logs);
 
         listView.setAdapter(adapter);
-        listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
+        listView.setOnScrollListener(new LogScrollListener());
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -88,6 +87,12 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 
         logReaderTask = new LogReaderTask(mHandler);
         logReaderTask.execute();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
     }
 
     public Runnable runnable = new Runnable() {
