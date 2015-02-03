@@ -9,4 +9,19 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"/>
 
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Derp"
+            android:id="@+id/unreadNotification"
+            android:gravity="center"
+            android:background="#ffffffff"
+            android:textSize="@dimen/abc_text_size_medium_material" />
+        </FrameLayout>
+
 </RelativeLayout>

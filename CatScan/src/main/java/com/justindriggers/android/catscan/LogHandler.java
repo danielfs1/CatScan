@@ -28,7 +28,7 @@ public class LogHandler extends Handler {
         String payload = msg.getData().getString(PAYLOAD_KEY);
 
         if(payload != null) {
-            mAdapter.add(new LogEntity(payload));
+            mAdapter.insert(new LogEntity(payload),0);
         }
     }
 }
