@@ -9,7 +9,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:fastScrollEnabled="true"
-        android:stackFromBottom="true"
         android:fastScrollAlwaysVisible="true"/>
 
     <FrameLayout
@@ -20,7 +19,7 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Derp"
+            android:text=""
             android:id="@+id/unreadNotification"
             android:gravity="center"
             android:background="#ffffffff"
