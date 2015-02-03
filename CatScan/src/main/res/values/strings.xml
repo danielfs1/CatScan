@@ -13,5 +13,6 @@
     <string name="title_activity_log_detail">LogDetailActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="count">15 new logs</string>
+    <string name="clearLogCat">Clear Log Cat</string>
 
 </resources>

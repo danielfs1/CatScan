@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,24 +53,25 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         adapter = new LogEntityAdapter(this, logs);
 
         listView.setAdapter(adapter);
-        listView.setOnScrollListener(new LogScrollListener());
+        listView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
+        //listView.setOnScrollListener(new LogScrollListener());
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if(firstVisibleItem == 0) {
                     lastTopCount = totalItemCount;
+                    unreadCount = 0;
                     if(unreadNotification.getVisibility() == View.VISIBLE) {
                         unreadNotification.setVisibility(View.INVISIBLE);
                         unreadNotification.startAnimation(animSlideOut);
                     }
                 } else {
-                    if(unreadNotification.getVisibility() == View.INVISIBLE) {
+                    if(unreadNotification.getVisibility() == View.INVISIBLE && unreadCount > 0) {
                         unreadNotification.setVisibility(View.VISIBLE);
                         unreadNotification.startAnimation(animSlideIn);
                     }
@@ -92,14 +95,16 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
-        listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        //listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
     }
 
     public Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            unreadCount = logs.size() - lastTopCount;
-            unreadNotification.setText(unreadCount + " new logs");
+            if(listView.getFirstVisiblePosition() != 0) {
+                unreadCount = logs.size() - lastTopCount;
+                unreadNotification.setText(unreadCount + " new logs");
+            }
         }
     };
 
@@ -124,7 +129,13 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.clear_logcat) {
+            try {
+                Runtime.getRuntime().exec("su logcat -c");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            logs.clear();
             return true;
         }
 
